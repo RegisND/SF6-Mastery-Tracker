@@ -1,0 +1,65 @@
+:root {
+    --sf-red: #ed1c24;
+    --gold: #f3ca20;
+    --dark-bg: #0d0d0d;
+    --card-bg: #1a1a1a;
+    --text-gray: #aaa;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    margin: 0;
+}
+
+.dashboard { width: 100%; max-width: 500px; }
+
+header { text-align: center; margin-bottom: 30px; }
+
+header h1 { letter-spacing: 3px; border-bottom: 2px solid var(--sf-red); display: inline-block; }
+
+.motto { font-style: italic; color: var(--text-gray); font-size: 0.8em; }
+
+.card { 
+    background: var(--card-bg); 
+    border-radius: 12px; 
+    padding: 20px; 
+    margin-bottom: 20px;
+    border-top: 4px solid var(--sf-red);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.card-header { display: flex; justify-content: space-between; align-items: center; }
+
+.matchup { font-size: 1.3em; font-weight: bold; color: var(--gold); }
+
+.nivel-badge { background: var(--sf-red); padding: 4px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+
+.detalhes { font-size: 0.9em; color: var(--text-gray); margin: 10px 0; }
+
+.slots-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin: 20px 0; }
+
+.slot { height: 14px; background: #333; border-radius: 3px; transition: 0.5s; }
+
+.slot.active { background: var(--gold); box-shadow: 0 0 12px var(--gold); }
+
+button { 
+    width: 100%; 
+    background: transparent; 
+    border: 1px solid var(--sf-red); 
+    color: var(--sf-red); 
+    padding: 15px; 
+    cursor: pointer; 
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+button:hover { background: var(--sf-red); color: white; }
+
+.btn-secundario { margin-top: 10px; border-color: var(--text-gray); color: var(--text-gray); }
+
