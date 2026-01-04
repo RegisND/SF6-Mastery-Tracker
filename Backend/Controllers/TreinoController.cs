@@ -17,56 +17,51 @@ public class TreinoController : ControllerBase
     }
 
     // GET: api/treino (Para o dashboard ver o nível atual)
+    // [HttpGet]
+    // public async Task<ActionResult<IEnumerable<FilaTreino>>> GetFila()   {
+    //     // Por enquanto, como não temos login, vamos passar um GUID qualquer ou
+    //     // buscar todos. Para teste, vamos buscar os 4 primeiros da fila.
+    //     return await _context.FilaTreinos
+    //         .Include(f => f.Resposta)
+    //         .Where(f => f.Concluido == false)
+    //         .OrderBy(f => f.OrdemFila)
+    //         .Take(4)
+    //         .ToListAsync();
+    // }
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Treino>>> GetTreinos()
+    public async Task<ActionResult<IEnumerable<FilaTreino>>> GetFila()
     {
-        return await _context.Treinos.ToListAsync();
+        var lista = await _context.FilaTreinos
+            .Include(f => f.Resposta)
+            .Where(f => f.Concluido == false)
+            .OrderBy(f => f.OrdemFila)
+            .ToListAsync();
+
+        return Ok(lista);
     }
 
-    // POST: api/treino/concluir/id (Para quando eu terminar as 100 repetições)
-    [HttpPost("concluir/{id}")]
-    public async Task<IActionResult> ConcluirNivel(Guid id)
-    {
-        var treino = await _context.Treinos.FindAsync(id);
-        if (treino == null) return NotFound();
-
-        // Lógica Shu-Ha-Ri: Avançar para o próximo estágio
-        treino.Nivel++;
-
-        // Aqui o sistema atualiza automaticamente os slots ativos no banco
-        // Conforme a dificuldade do próximo nível
-        if (treino.SlotsAtivos < 8) treino.SlotsAtivos++;
-
-        treino.DataAtualizacao = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
-        return Ok(treino);
-    }
-
+    // POST: api/treino/finalizar-round/{id}
     [HttpPost("finalizar-round/{id}")]
     public async Task<IActionResult> FinalizarRound(Guid id, [FromQuery] int segundosRestantes)
     {
-        var treino = await _context.Treinos.FindAsync(id);
-        if (treino == null) return NotFound();
-
+        var itemFila = await _context.FilaTreinos.FindAsync(id);
+        if (itemFila == null) return NotFound();
+        
         if (segundosRestantes > 0)
         {
-            // SUCESSO: Subir de nível seguindo a regra de slots
-            treino.Nivel++;
-            if (treino.SlotsAtivos < 8) treino.SlotsAtivos++;
-            treino.Status = "Em curso";
-
-            // Aqui poderíamos salvar o "bônus" de tempo se quiséssemos, 
-            // mas por enquanto vamosfocar na progressão.
+            // SUCESSO: Marca como concluído
+            itemFila.Concluido = true;
         }
         else
         {
-            // FALHA: Tempo esgotado
-            treino.Status = "Falha - Tentar amanhã";
+            // FALHA: Joga para o fim da fila
+            var maiorOrdem = await _context.FilaTreinos.MaxAsync(f => f.OrdemFila);
+            itemFila.OrdemFila = maiorOrdem + 1;
+            itemFila.TentativasFalhas++;
         }
 
-        treino.DataAtualizacao = DateTime.UtcNow;
         await _context.SaveChangesAsync();
-        return Ok(new { mensagem = "Round processado", treino, bonusSugerido = segundosRestantes});
+        return Ok(new { mensagem = "Round processado", itemFila });
     }
 }

@@ -1,59 +1,112 @@
-const API_URL = 'http://localhost:5151/api/treino';
+// Configuração do bônus de tempo global
+let tempoBonusSegundos = 0;
+let cronometroInterval;
 
-async function fetchTreino() {
+async function carregarDashboard() {
     try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        renderizarCards(data);
-    } catch (err) {
-        console.error("Erro ao conectar ao Dojo:", err);
-    }
-}
+        const response = await fetch('http://localhost:5151/api/treino');
+        const treinos = await response.json();
 
-function renderizarCards(treinos) {
-    const container = document.getElementById('treino-container');
-    container.innerHTML = treinos.map(t => `
-        <div class="card">
-            <div class="card-header">
-                <div class="matchup">${t.personagem} vs ${t.oponente}</div>
-                <div class="nivel-badge">NÍVEL ${t.nivel}</div>
-            </div>
-            <div class="detalhes">${t.fundamento} | Botão: ${t.botaoAtaque}</div>
+        const container = document.getElementById('treino-container');
+        container.innerHTML = '';
+
+        if (treinos.length === 0) {
+            container.innerHTML = "<h2>Dojo Limpo! Todos os fundamentos concluídos.</h2>";
+            return;
+        }
+
+        treinos.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card-treino';
+
+            // Lógica de exibição de slots (8 slots totais)
+            // Se Nível 1: 8 slots de foco. Se nível 2: 7 slots de foco / 1 distração.
+            const slotsFoco = 9 - item.nivelId;
             
-            <div class="slots-grid">
-                ${gerarSlots(t.slotsAtivos)}
-            </div>
+            card.innerHTML = `
+                <div class="card-header">
+                    <h3>${item.resposta.personagem} - ${item.situacao}</h3>
+                    <span class="nivel-badge">NÌVEL ${item.nivelId}</span>
+                </div>
 
-            <button onclick="concluirNivel('${t.id}')">Concluir 100 Repetições</button>
-        </div>
-    `).join('');
-}
+                <div."stack-info">
+                    <p><strong>Ação Foco:</strong> ${item.resposta.nome}</p>
+                    <p><strong>Distração:</strong> ${item.acaoDistracao}</p>
+                </div>
 
-function gerarSlots(ativos) {
-    let html = '';
-    for (let i = 0; i < 8; i++) {
-        html += `<div class="slot ${i < ativos ? 'active' : ''}"></div>`;
+                <div class="slots-container">
+                    ${Array(8).fill().map((_, i) => `
+                        <div class="slot ${i < (9 - item.nivelId) ? 'foco' : 'distracao'}"></div>
+                    `).join('')}
+                </div>
+
+                <div class="timer-display" id="timer-${item.id}">15:00</div>
+
+                <div class="card-actions">
+                        <button onclick="iniciarRound('${item.id}' id="btn-start-${item.id}" class="btn-start">Iniciar Round</button>
+                        <button onclick="concluirRound('${item.id}')" id="btn-finish-${item.id}" class="btn-finish" style="display:none">Concluir (100 Reps)</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar o Dojo:", error);
     }
-    return html;
 }
 
-async function concluirNivel(id) {
-    const confirmar = confirm("Você atingiu 100 repetições sem erros fatais?");
-    if (!confirmar) return;
+function iniciarRound(id) {
+    let tempoRestante = 15 * 60 + tempoBonusSegundos;
+    tempoBonusSegundos = 0;
 
+    document.getElementById(`btn-start-${id}`).style.display = 'none';
+    document.getElementById(`btn-finish-${id}`).style.display = 'block';
+
+    const display = document.getElementById(`timer-${id}`);
+
+    cronometroInterval = setInterval(() => {
+        let minutos = Math.floor(tempoRestante / 60);
+        let segundos = tempoRestante % 60;
+
+        display.innerText = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+        if (tempoRestante <= 0) {
+            clearInterval(cronometroInterval);
+            finalizarNoBackend(id, 0); // Falha por tempo
+        }
+        tempoRestante--;
+    }, 1000);
+}
+
+async function concluirRound(id) {
+    clearInterval(cronometroInterval);
+
+    // Pega quanto tempo sobrou para ser bônus
+    const tempoTexto = document.getElementById(`timer-${id}`).innerText;
+    const [min, seg] = tempoTexto.split(':').map(Number);
+    const segundosRestantes = min * 60 + seg;
+
+    if (confirm(`Você realmente concluiu as 100 repetições com foco?\nTempo bônus: ${min}:${seg}`)) {
+        tempoBonusSegundos = segundosRestantes;
+        await finalizarNoBackend(id, segundosRestantes);
+    } else {
+        iniciarRound(id); // Reinicia se clicar sem querer
+    }
+}
+
+async function finalizarNoBackend(id, segundos) {
     try {
-        const response = await fetch(API_URL + '/concluir/' + id, { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+        const response = await fetch(`http://localhost:5151/api/treino/finalizar-round/${id}?segundosRestantes=${segundos}`, {
+            method: 'POST'
         });
 
         if (response.ok) {
-            fetchTreino(); // Recarrega os dados para atualizar os slots
+            alert(segundos > 0 ? "Ótimo trabalho! Nível concluído." : "Tempo esgotado! O treino foi para o fim da fila.");
+            carregarDashboard();
         }
-    } catch (err) {
-        alert("Erro ao comunicar com o Backend. Verifique se o dotnet run está ativo.");
+    } catch (error) {
+        console.error("Erro ao finalizar:", error);
     }
 }
 
-// Inicializa o dashboard
-fetchTreino();
+// Inicializa o Dojo
+carregarDashboard();

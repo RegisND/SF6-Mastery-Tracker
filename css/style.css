@@ -4,6 +4,7 @@
     --dark-bg: #0d0d0d;
     --card-bg: #1a1a1a;
     --text-gray: #aaa;
+    --success-green: #28a745;
 }
 
 body {
@@ -16,50 +17,168 @@ body {
     margin: 0;
 }
 
-.dashboard { width: 100%; max-width: 500px; }
-
-header { text-align: center; margin-bottom: 30px; }
-
-header h1 { letter-spacing: 3px; border-bottom: 2px solid var(--sf-red); display: inline-block; }
-
-.motto { font-style: italic; color: var(--text-gray); font-size: 0.8em; }
-
-.card { 
-    background: var(--card-bg); 
-    border-radius: 12px; 
-    padding: 20px; 
-    margin-bottom: 20px;
-    border-top: 4px solid var(--sf-red);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+.dashboard { 
+    width: 100%; 
+    max-width: 500px; 
 }
 
-.card-header { display: flex; justify-content: space-between; align-items: center; }
+header { 
+    text-align: center; 
+    margin-bottom: 30px; 
+}
 
-.matchup { font-size: 1.3em; font-weight: bold; color: var(--gold); }
+header h1 { 
+    letter-spacing: 3px; 
+    border-bottom: 2px solid var(--sf-red); 
+    display: inline-block; 
+    margin-bottom: 10px;
+}
 
-.nivel-badge { background: var(--sf-red); padding: 4px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+.motto { 
+    font-style: italic; 
+    color: var(--text-gray); 
+    font-size: 0.8em; 
+}
 
-.detalhes { font-size: 0.9em; color: var(--text-gray); margin: 10px 0; }
+/* Container que segura os cards */
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-.slots-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin: 20px 0; }
+/* Estilização do Card */
+.card-treino { 
+    background: var(--card-bg); 
+    border-radius: 12px; 
+    padding: 25px; 
+    border-top: 4px solid var(--sf-red);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
 
-.slot { height: 14px; background: #333; border-radius: 3px; transition: 0.5s; }
+.card-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 15px;
+}
 
-.slot.active { background: var(--gold); box-shadow: 0 0 12px var(--gold); }
+.card-header h3 {
+    margin: 0;
+    color: var(--gold);
+    font-size: 1.2em;
+}
+
+.nivel-badge { 
+    background: var(--sf-red); 
+    padding: 4px 12px; 
+    border-radius: 4px; 
+    font-size: 0.75em; 
+    font-weight: bold; 
+}
+
+/* Informações do Mental Stack */
+.stack-info { 
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-size: 0.9em;
+    text-align: left;
+    border-left: 3px solid var(--gold);
+}
+
+.stack-info p { margin: 5px 0; }
+.stack-info strong { color: var(--gold); }
+
+/* Slots de Carga Mental */
+.slots-container { 
+    display: flex; 
+    justify-content: center; 
+    gap: 6px; 
+    margin: 20px 0; 
+}
+
+.slot { 
+    width: 35px; 
+    height: 12px; 
+    background: #333; 
+    display: block; /* Garante que o elemento ocupe espaço */
+}
+
+.slot.foco { 
+    background: var(--gold); 
+    box-shadow: 0 0 10px rgba(243, 202, 32, 0.4); 
+}
+
+.slot.distracao { 
+    background: var(--sf-red); 
+    box-shadow: 0 0 8px rgba(237, 28, 36, 0.3); 
+}
+
+/* Cronômetro Digital */
+.timer-display { 
+    font-size: 2.2rem; 
+    font-weight: bold; 
+    color: white; 
+    font-family: 'Courier New', Courier, monospace;
+    margin: 20px 0;
+    text-align: center;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+
+/* Botões de Ação */
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
 button { 
     width: 100%; 
     background: transparent; 
-    border: 1px solid var(--sf-red); 
-    color: var(--sf-red); 
     padding: 15px; 
     cursor: pointer; 
     font-weight: bold;
     text-transform: uppercase;
     transition: 0.3s;
+    border-radius: 6px;
+    letter-spacing: 1px;
 }
 
-button:hover { background: var(--sf-red); color: white; }
+.btn-start { 
+    border: 1px solid var(--gold); 
+    color: var(--gold); 
+}
 
-.btn-secundario { margin-top: 10px; border-color: var(--text-gray); color: var(--text-gray); }
+.btn-start:hover { 
+    background: var(--gold); 
+    color: black; 
+}
 
+.btn-finish { 
+    border: 1px solid var(--success-green); 
+    color: var(--success-green); 
+}
+
+.btn-finish:hover { 
+    background: var(--success-green); 
+    color: white; 
+}
+
+.btn-novo-fundamento {
+    margin-top: 30px;
+    border: 1px dashed var(--text-gray); /* Borda tracejada cinza */
+    color: var(--text-gray); /* Texto cinza */
+    background: transparent;
+    padding: 10px;
+    font-size: 0.8em;
+}
+
+.btn-novo-fundamento:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(243, 202, 32, 0.05);
+}
