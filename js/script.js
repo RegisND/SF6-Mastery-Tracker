@@ -18,18 +18,14 @@ async function carregarDashboard() {
         treinos.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card-treino';
-
-            // Lógica de exibição de slots (8 slots totais)
-            // Se Nível 1: 8 slots de foco. Se nível 2: 7 slots de foco / 1 distração.
-            const slotsFoco = 9 - item.nivelId;
             
             card.innerHTML = `
                 <div class="card-header">
                     <h3>${item.resposta.personagem} - ${item.situacao}</h3>
-                    <span class="nivel-badge">NÌVEL ${item.nivelId}</span>
+                    <span class="nivel-badge">NÍVEL ${item.nivelId}</span>
                 </div>
 
-                <div."stack-info">
+                <div class="stack-info">
                     <p><strong>Ação Foco:</strong> ${item.resposta.nome}</p>
                     <p><strong>Distração:</strong> ${item.acaoDistracao}</p>
                 </div>
@@ -43,8 +39,8 @@ async function carregarDashboard() {
                 <div class="timer-display" id="timer-${item.id}">15:00</div>
 
                 <div class="card-actions">
-                        <button onclick="iniciarRound('${item.id}' id="btn-start-${item.id}" class="btn-start">Iniciar Round</button>
-                        <button onclick="concluirRound('${item.id}')" id="btn-finish-${item.id}" class="btn-finish" style="display:none">Concluir (100 Reps)</button>
+                    <button onclick="iniciarRound('${item.id}')" id="btn-start-${item.id}" class="btn-start">Iniciar Round</button>
+                    <button onclick="concluirRound('${item.id}')" id="btn-finish-${item.id}" class="btn-finish" style="display:none">Concluir (100 Reps)</button>
                 </div>
             `;
             container.appendChild(card);
@@ -55,9 +51,13 @@ async function carregarDashboard() {
 }
 
 function iniciarRound(id) {
-    let tempoRestante = 15 * 60 + tempoBonusSegundos;
-    tempoBonusSegundos = 0;
+    // Se já houver um timer rodando, para ele
+    if (cronometroInterval) clearInterval(cronometroInterval);
 
+    let tempoRestante = (15 * 60) + tempoBonusSegundos;
+    tempoBonusSegundos = 0; // Consome o bônus
+
+    // Troca os botões
     document.getElementById(`btn-start-${id}`).style.display = 'none';
     document.getElementById(`btn-finish-${id}`).style.display = 'block';
 
@@ -71,7 +71,8 @@ function iniciarRound(id) {
 
         if (tempoRestante <= 0) {
             clearInterval(cronometroInterval);
-            finalizarNoBackend(id, 0); // Falha por tempo
+            alert("Tempo esgotado! O treino irá para o fim da fila.");
+            finalizarNoBackend(id, 0); 
         }
         tempoRestante--;
     }, 1000);
@@ -80,16 +81,17 @@ function iniciarRound(id) {
 async function concluirRound(id) {
     clearInterval(cronometroInterval);
 
-    // Pega quanto tempo sobrou para ser bônus
-    const tempoTexto = document.getElementById(`timer-${id}`).innerText;
+    const display = document.getElementById(`timer-${id}`);
+    const tempoTexto = display.innerText;
     const [min, seg] = tempoTexto.split(':').map(Number);
-    const segundosRestantes = min * 60 + seg;
+    const segundosRestantes = (min * 60) + seg;
 
-    if (confirm(`Você realmente concluiu as 100 repetições com foco?\nTempo bônus: ${min}:${seg}`)) {
-        tempoBonusSegundos = segundosRestantes;
+    if (confirm(`Você realmente concluiu as 100 repetições com foco?\nTempo bônus para o próximo: ${min}:${seg}`)) {
+        tempoBonusSegundos = segundosRestantes; // Acumula bônus para o próximo card
         await finalizarNoBackend(id, segundosRestantes);
     } else {
-        iniciarRound(id); // Reinicia se clicar sem querer
+        // Se cancelou, retoma o cronômetro (ajuste simples para não perder o tempo)
+        iniciarRound(id); 
     }
 }
 
@@ -100,13 +102,16 @@ async function finalizarNoBackend(id, segundos) {
         });
 
         if (response.ok) {
-            alert(segundos > 0 ? "Ótimo trabalho! Nível concluído." : "Tempo esgotado! O treino foi para o fim da fila.");
-            carregarDashboard();
+            alert(segundos > 0 ? "Ótimo trabalho! Log salvo no histórico." : "Treino movido para o fim da fila.");
+            carregarDashboard(); // Recarrega os cards
+        } else {
+            alert("Erro ao salvar no backend.");
         }
     } catch (error) {
         console.error("Erro ao finalizar:", error);
+        alert("Não foi possível conectar ao servidor.");
     }
 }
 
-// Inicializa o Dojo
+// Inicializa o Dojo ao carregar a página
 carregarDashboard();

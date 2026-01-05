@@ -45,23 +45,42 @@ public class TreinoController : ControllerBase
     [HttpPost("finalizar-round/{id}")]
     public async Task<IActionResult> FinalizarRound(Guid id, [FromQuery] int segundosRestantes)
     {
-        var itemFila = await _context.FilaTreinos.FindAsync(id);
+        // 1. Busca o item na fila incluindo os dados da resposta (personagem/fundamento)
+        var itemFila = await _context.FilaTreinos
+            .Include(f => f.Resposta)
+            .FirstOrDefaultAsync(f => f.Id == id);
+
         if (itemFila == null) return NotFound();
-        
+
         if (segundosRestantes > 0)
         {
             // SUCESSO: Marca como concluído
             itemFila.Concluido = true;
+
+            // 2. CRIA O LOG DE HISTÓRICO PARA O BI
+            var log = new HistoricoTreino
+            {
+                Id = Guid.NewGuid(),
+                UserId = itemFila.UserId,
+                RespostaId = itemFila.RespostaId,
+                FundamentoId = itemFila.Resposta!.FundamentoId,
+                NivelInt = itemFila.NivelId,
+                SegundosRestantes = segundosRestantes,
+                DataConclusao = DateTime.UtcNow,
+                Personagem = itemFila.Resposta.Personagem ?? "Chun-Li"
+            };
+
+            _context.HistoricoTreino.Add(log);
         }
         else
         {
-            // FALHA: Joga para o fim da fila
+            // FALHA: Joga para o fim da fila (regra que já tínhamos)
             var maiorOrdem = await _context.FilaTreinos.MaxAsync(f => f.OrdemFila);
             itemFila.OrdemFila = maiorOrdem + 1;
             itemFila.TentativasFalhas++;
         }
 
         await _context.SaveChangesAsync();
-        return Ok(new { mensagem = "Round processado", itemFila });
+        return Ok(new { mensagem = "Round processado e histórico salvo", itemFila });
     }
 }

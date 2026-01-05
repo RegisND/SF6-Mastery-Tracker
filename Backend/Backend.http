@@ -1,6 +1,9 @@
 @Backend_HostAddress = http://localhost:5151
 
-GET {{Backend_HostAddress}}/weatherforecast/
+### Buscar Fila de Treino
+GET {{Backend_HostAddress}}/api/treino/fila
 Accept: application/json
 
-###
+### Finalizar um Round (Substitua o ID pelo que aparecer na fila)
+POST {{Backend_HostAddress}}/api/treino/finalizar-round/SEU-ID-AQUI?segundosRestantes=120
+Accept: application/json
