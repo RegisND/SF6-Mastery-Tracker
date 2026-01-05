@@ -12,6 +12,7 @@ namespace Backend.Data
         public DbSet<RespostaTreino> RespostasTreino { get; set; }
         public DbSet<FilaTreino> FilaTreinos { get; set; }
         public DbSet<NivelStack> NiveisStack { get; set; } // Caso queira mapear a tabela de configurações
+        public DbSet<HistoricoTreino> HistoricoTreino { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,6 +72,19 @@ namespace Backend.Data
                 entity.Property(e => e.SlotsFoco).HasColumnName("slots_foco!");
                 entity.Property(e => e.SlotsDistracao).HasColumnName("slots_distracao");
                 entity.Property(e => e.DescricaoSetup).HasColumnName("descricao_setup");
+            });
+
+            modelBuilder.Entity<HistoricoTreino>(entity =>
+            {
+                entity.ToTable("historico_treino");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired(false);
+                entity.Property(e => e.RespostaId).HasColumnName("resposta_id");
+                entity.Property(e => e.FundamentoId).HasColumnName("fundamento_id");
+                entity.Property(e => e.NivelInt).HasColumnName("nivel_int");
+                entity.Property(e => e.SegundosRestantes).HasColumnName("segundos_restantes");
+                entity.Property(e => e.DataConclusao).HasColumnName("data_conclusao");
+                entity.Property(e => e.Personagem).HasColumnName("personagem");    
             });
             
             base.OnModelCreating(modelBuilder);
