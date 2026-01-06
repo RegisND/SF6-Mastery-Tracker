@@ -13,4 +13,5 @@ public class HistoricoTreino
     public int SegundosRestantes { get; set; }
     public DateTime DataConclusao { get; set; } = DateTime.UtcNow;
     public string Personagem { get; set; } = string.Empty;
+    public virtual RespostaTreino Resposta { get; set; } = null!;
 }

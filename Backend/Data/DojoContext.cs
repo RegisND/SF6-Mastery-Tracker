@@ -84,7 +84,10 @@ namespace Backend.Data
                 entity.Property(e => e.NivelInt).HasColumnName("nivel_int");
                 entity.Property(e => e.SegundosRestantes).HasColumnName("segundos_restantes");
                 entity.Property(e => e.DataConclusao).HasColumnName("data_conclusao");
-                entity.Property(e => e.Personagem).HasColumnName("personagem");    
+                entity.Property(e => e.Personagem).HasColumnName("personagem");
+                entity.HasOne(d => d.Resposta)
+                    .WithMany()
+                    .HasForeignKey(d => d.RespostaId);  
             });
             
             base.OnModelCreating(modelBuilder);
