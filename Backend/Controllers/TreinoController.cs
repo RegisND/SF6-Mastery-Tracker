@@ -83,4 +83,32 @@ public class TreinoController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(new { mensagem = "Round processado e histórico salvo", itemFila });
     }
+
+    [HttpGet("estatisticas/por-fundamento")]
+    public async Task<ActionResult> GetEstatisticasPorFundamento()
+    {
+        // 1. Buscamos os dados agrupados do banco (trazendo apenas o necessário)
+        var dadosBrutos = await _context.HistoricoTreino
+            .Include(h => h.Resposta) // Para pegar o nome do fundamento
+            .GroupBy(h => h.Resposta.Nome)
+            .Select(g => new
+            {
+                NomeFundamento = g.Key,
+                Logs = g.Select(x => x.SegundosRestantes).ToList()
+            })
+            .ToListAsync();
+
+        // 2. Agora o C# faz o cálculo (fora do banco de dados)
+        var estatisticas = dadosBrutos.Select(d => new
+        {
+            Fundamento = d.NomeFundamento ?? "Outros",
+            // Soma o tempo gasto: (15 min em seg - segundos que sobraram)
+            TotalMinutos = Math.Round(d.Logs.Sum(seg => (15.0 * 60.0) - seg) / 60.0, 2),
+            QuantidadeTreinos = d.Logs.Count
+        })
+        .OrderByDescending(x => x.TotalMinutos)
+        .ToList();
+        
+        return Ok(estatisticas);
+    }
 }

@@ -3,18 +3,26 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dojo SF6 | Mastery Tracker</title>
+        <title>Dojo Master | SF6 Tracker</title>
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <div class="dashboard">
             <header>
-                <h1>DOJO MASTER: SF6 - MASTERY TRACKER</h1>
-                <p class="motto">"Treine mil dias para a base, dez mil para a maestria."</p>
+                <h1>DOJO MASTER: SF6</h1>
+                <div class="motto">"Treine mil dias para a base, dez mil para a maestria."</div>
             </header>
+
             <div id="treino-container" class="dashboard-grid"></div>
-            <button class="btn-novo-fundamento">Novo Fundamento</button>
+
+            <div class="actions-footer">
+                <button class="btn-secondary">+ Novo Fundamento</button>
+                <button class="btn-secondary btn-bi" onclick="location.href='estatisticas.html'">
+                    📊 Ver Estatísticas
+                </button>
+            </div>
         </div>
+
         <script src="js/script.js"></script>
     </body>
 </html>
