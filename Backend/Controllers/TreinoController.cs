@@ -63,7 +63,7 @@ public class TreinoController : ControllerBase
                 Id = Guid.NewGuid(),
                 UserId = itemFila.UserId,
                 RespostaId = itemFila.RespostaId,
-                FundamentoId = itemFila.Resposta!.FundamentoId,
+                // FundamentoId = itemFila.Resposta!.FundamentoId,
                 NivelInt = itemFila.NivelId,
                 SegundosRestantes = segundosRestantes,
                 DataConclusao = DateTime.UtcNow,
@@ -110,5 +110,37 @@ public class TreinoController : ControllerBase
         .ToList();
         
         return Ok(estatisticas);
+    }
+
+    [HttpPost("cadastrar-fundamento")]
+    public async Task<IActionResult> CadastrarFundamento([FromBody] RespostaTreino novoFundamento)
+    {
+        if (novoFundamento == null) return BadRequest("Dados inválidos");
+
+        // 1. Salva o fundamento na biblioteca
+        _context.RespostasTreino.Add(novoFundamento);
+        await _context.SaveChangesAsync();
+
+        // 2. Busca a última ordem para colocar no fim da fila
+        var ultimaOrdem = await _context.FilaTreinos.AnyAsync()
+            ? await _context.FilaTreinos.MaxAsync(f => f.OrdemFila)
+            : 0;
+
+        // 3. Cria a entrada na fila de treino
+        var fila = new FilaTreino
+        {
+            Id = Guid.NewGuid(),
+            RespostaId = novoFundamento.Id,
+            UserId = Guid.Empty, // Ou o ID que você estiver usando para tests
+            NivelId = 1,
+            OrdemFila = ultimaOrdem + 1,
+            Concluido = false,
+            TentativasFalhas = 0
+        };
+
+        _context.FilaTreinos.Add(fila);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Fundamento consagrado!", Id = novoFundamento.Id});
     }
 }

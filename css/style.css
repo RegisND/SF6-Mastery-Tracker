@@ -1,10 +1,20 @@
+/* ==========================================================================
+   VARIÁVEIS E RESET
+   ========================================================================== */
 :root {
-    --sf-red: #ed1c24;
+    --dark-bg: #0a0a0a;
+    --card-bg: #141414;
     --gold: #f3ca20;
-    --dark-bg: #0d0d0d;
-    --card-bg: #1a1a1a;
-    --text-gray: #aaa;
-    --success-green: #28a745;
+    --sf-red: #ff4655;
+    --text-gray: #a0a0a0;
+    --border-color: #333;
+    --transition: 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-box-sizing: border-box;
 }
 
 body {
@@ -15,188 +25,46 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
-    margin: 0;
     min-height: 100vh;
 }
 
-.dashboard { 
-    width: 100%; 
-    max-width: 500px;
-    transition: max-width 0.4s ease;
+/* ==========================================================================
+   ESTRUTURA DO DASHBOARD
+   ========================================================================== */
+.dashboard {
+    width: 100%;
+    max-width: 500px; /* Padrão mobile-focus para os cards */
+    transition: max-width var(--transition);
 }
 
 .dashboard.wide {
-    max-width: 900px;
+    max-width: 900px; /* Para a página de BI/Gráficos */
 }
 
-header { 
-    text-align: center; 
-    margin-bottom: 30px; 
-}
-
-header h1 { 
-    letter-spacing: 3px; 
-    border-bottom: 2px solid var(--sf-red); 
-    display: inline-block; 
-    margin-bottom: 10px;
-}
-
-.motto { 
-    font-style: italic; 
-    color: var(--text-gray); 
-    font-size: 0.8em; 
-}
-
-/* Container que segura os cards */
-.dashboard-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.actions-footer {
-    display: flex;
-    gap: 15px;
-    margin-top: 40px;
-    width: 100%;
-}
-
-/* Estilização do Card */
-.card-treino { 
-    background: var(--card-bg); 
-    border-radius: 12px; 
-    padding: 25px; 
-    border-top: 4px solid var(--sf-red);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transition: transform 0.3s ease;
-}
-
-.card-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 15px;
-}
-
-.card-header h3 {
-    margin: 0;
-    color: var(--gold);
-    font-size: 1.2em;
-}
-
-.nivel-badge { 
-    background: var(--sf-red); 
-    padding: 4px 12px; 
-    border-radius: 4px; 
-    font-size: 0.75em; 
-    font-weight: bold; 
-}
-
-/* Informações do Mental Stack */
-.stack-info { 
-    background: rgba(255, 255, 255, 0.05);
-    padding: 12px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-size: 0.9em;
-    text-align: left;
-    border-left: 3px solid var(--gold);
-}
-
-.stack-info p { margin: 5px 0; }
-.stack-info strong { color: var(--gold); }
-
-/* Slots de Carga Mental */
-.slots-container { 
-    display: flex; 
-    justify-content: center; 
-    gap: 6px; 
-    margin: 20px 0; 
-}
-
-.slot { 
-    width: 35px; 
-    height: 12px; 
-    background: #333; 
-    display: block; /* Garante que o elemento ocupe espaço */
-}
-
-.slot.foco { 
-    background: var(--gold); 
-    box-shadow: 0 0 10px rgba(243, 202, 32, 0.4); 
-}
-
-.slot.distracao { 
-    background: var(--sf-red); 
-    box-shadow: 0 0 8px rgba(237, 28, 36, 0.3); 
-}
-
-/* Cronômetro Digital */
-.timer-display { 
-    font-size: 2.2rem; 
-    font-weight: bold; 
-    color: white; 
-    font-family: 'Courier New', Courier, monospace;
-    margin: 20px 0;
+header {
     text-align: center;
-    letter-spacing: 2px;
-    text-shadow: 0 0 15px rgba(255,255,255,0.1);
+    margin-bottom: 40px;
 }
 
-/* Botões de Ação */
-.card-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+h1 {
+    font-size: 2rem;
+    letter-spacing: 4px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
-button { 
-    width: 100%; 
-    background: transparent; 
-    padding: 15px; 
-    cursor: pointer; 
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: 0.3s;
-    border-radius: 6px;
-    letter-spacing: 1px;
-}
-
-.btn-start { 
-    border: 1px solid var(--gold); 
-    color: var(--gold); 
-}
-
-.btn-start:hover { 
-    background: var(--gold); 
-    color: black; 
-}
-
-.btn-finish { 
-    border: 1px solid var(--success-green); 
-    color: var(--success-green); 
-}
-
-.btn-finish:hover { 
-    background: var(--success-green); 
-    color: white; 
-}
-
-.btn-novo-fundamento {
-    margin-top: 30px;
-    border: 1px dashed var(--text-gray); /* Borda tracejada cinza */
-    color: var(--text-gray); /* Texto cinza */
-    background: transparent;
-    padding: 10px;
-    font-size: 0.8em;
-}
-
-.btn-novo-fundamento:hover {
-    border-color: var(--gold);
+.motto {
     color: var(--gold);
-    background: rgba(243, 202, 32, 0.05);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-top: 10px;
+    letter-spacing: 2px;
+    opacity: 0.8;
 }
 
+/* ==========================================================================
+   COMPONENTES DE UI (BOTÕES E INPUTS)
+   ========================================================================== */
 .btn-secondary {
     flex: 1;
     background: transparent;
@@ -205,7 +73,7 @@ button {
     padding: 12px;
     font-size: 0.85em;
     cursor: pointer;
-    transition: 0.3s;
+    transition: var(--transition);
     border-radius: 6px;
     text-transform: uppercase;
     font-weight: bold;
@@ -217,24 +85,108 @@ button {
     background: rgba(243, 202, 32, 0.05);
 }
 
-.btn-bi {
-    border-style: solid;
+.btn-finish {
+    background: var(--gold);
+    color: #000;
+    font-weight: bold;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: var(--transition);
 }
 
+.btn-finish:hover {
+    background: #fff;
+    box-shadow: 0 0 15px var(--gold);
+}
+
+.input-dark {
+    width: 100%;
+    padding: 12px;
+    background: #1a1a1a;
+    color: #eee;
+    border: 1px solid #444;
+    border-radius: 4px;
+    font-family: inherit;
+    transition: border-color var(--transition);
+}
+
+.input-dark:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+/* ==========================================================================
+   FORMULÁRIO DE CADASTRO (MUSASHI RULES)
+   ========================================================================== */
+.form-musashi {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.section-divider {
+    border-top: 1px solid #333;
+    padding-top: 20px;
+    margin-top: 10px;
+}
+
+.label-alert {
+    color: var(--sf-red) !important;
+}
+
+.help-text {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    margin-bottom: 5px;
+}
+
+.input-small {
+    width: 80px;
+    text-align: center;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* ==========================================================================
+   DASHBOARD DE CARDS (INDEX)
+   ========================================================================== */
+.actions-footer {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    width: 100%;
+}
+
+/* Estilização para as estatísticas de BI */
 .estatisticas-section {
     background: var(--card-bg);
     padding: 30px;
     border-radius: 12px;
-    border: 1px solid #333;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
     margin-top: 20px;
-
-    h2 {
-        color: var(--gold);
-        text-align: center;
-        margin-bottom: 25px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
 }
-

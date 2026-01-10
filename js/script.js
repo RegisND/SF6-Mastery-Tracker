@@ -1,117 +1,108 @@
-// Configuração do bônus de tempo global
-let tempoBonusSegundos = 0;
-let cronometroInterval;
+// VARIÁVEIS GLOBAIS
+let tempo = 15 * 60; // 15 minutos em segundos
+let rodando = false;
+let cronometro;
+let idTreinoFila = null; // Para saber qual item da fila estamos concluindo
 
-async function carregarDashboard() {
+// ELEMENTOS DA TELA
+const btnTimer = document.getElementById('btn-timer');
+const btnConcluir = document.getElementById('btn-concluir');
+const displayTimer = document.getElementById('timer');
+
+// 1. CARREGAR DADOS DO BANCO
+async function carregarDadosIniciais() {
     try {
         const response = await fetch('http://localhost:5151/api/treino');
-        const treinos = await response.json();
+        const fila = await response.json();
 
-        const container = document.getElementById('treino-container');
-        container.innerHTML = '';
+        // Isso vai nos ajudar a confirmar no Console do F12 se os dados chegaram
+        console.log("Dojo Data:", fila);
 
-        if (treinos.length === 0) {
-            container.innerHTML = "<h2>Dojo Limpo! Todos os fundamentos concluídos.</h2>";
-            return;
+        if (fila && fila.length > 0) {
+            const atual = fila[0]; 
+            const r = atual.resposta; // Exatamente como aparece no seu JSON (minúsculo)
+
+            if (r) {
+                // Injetando os dados usando os nomes exatos do seu JSON:
+                document.getElementById('titulo-treino').innerText = `${r.personagem} - ${r.nome}`;
+                document.getElementById('jogo-display').innerText = `JOGO: ${r.jogo} | "O caminho é a própria prática."`;
+                document.getElementById('nivel-id').innerText = atual.nivelId || 1;
+                
+                // Mapeando FOCO e DISTRAÇÃO que você acabou de cadastrar
+                document.getElementById('foco-acao').innerText = r.foco || "Foco total";
+                document.getElementById('distracao-acao').innerText = r.distracao || "Nenhuma";
+                
+                // Guarda o ID da fila para poder concluir o round depois
+                idTreinoFila = atual.id;
+            }
+        } else {
+            document.getElementById('titulo-treino').innerText = "Nenhum treino na fila";
         }
-
-        treinos.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card-treino';
-            
-            card.innerHTML = `
-                <div class="card-header">
-                    <h3>${item.resposta.personagem} - ${item.situacao}</h3>
-                    <span class="nivel-badge">NÍVEL ${item.nivelId}</span>
-                </div>
-
-                <div class="stack-info">
-                    <p><strong>Ação Foco:</strong> ${item.resposta.nome}</p>
-                    <p><strong>Distração:</strong> ${item.acaoDistracao}</p>
-                </div>
-
-                <div class="slots-container">
-                    ${Array(8).fill().map((_, i) => `
-                        <div class="slot ${i < (9 - item.nivelId) ? 'foco' : 'distracao'}"></div>
-                    `).join('')}
-                </div>
-
-                <div class="timer-display" id="timer-${item.id}">15:00</div>
-
-                <div class="card-actions">
-                    <button onclick="iniciarRound('${item.id}')" id="btn-start-${item.id}" class="btn-start">Iniciar Round</button>
-                    <button onclick="concluirRound('${item.id}')" id="btn-finish-${item.id}" class="btn-finish" style="display:none">Concluir (100 Reps)</button>
-                </div>
-            `;
-            container.appendChild(card);
-        });
     } catch (error) {
-        console.error("Erro ao carregar o Dojo:", error);
+        console.error("Erro ao conectar com o Dojo:", error);
     }
 }
 
-function iniciarRound(id) {
-    // Se já houver um timer rodando, para ele
-    if (cronometroInterval) clearInterval(cronometroInterval);
+// 2. LÓGICA DO TIMER
+btnTimer.addEventListener('click', function() {
+    if (!rodando) {
+        rodando = true;
+        btnTimer.innerText = "Pausar";
+        btnTimer.style.background = "#444"; // Muda a cor ao pausar
+        btnConcluir.style.display = "block"; // Mostra o concluir
 
-    let tempoRestante = (15 * 60) + tempoBonusSegundos;
-    tempoBonusSegundos = 0; // Consome o bônus
+        cronometro = setInterval(() => {
+            tempo--;
+            atualizarDisplay();
 
-    // Troca os botões
-    document.getElementById(`btn-start-${id}`).style.display = 'none';
-    document.getElementById(`btn-finish-${id}`).style.display = 'block';
-
-    const display = document.getElementById(`timer-${id}`);
-
-    cronometroInterval = setInterval(() => {
-        let minutos = Math.floor(tempoRestante / 60);
-        let segundos = tempoRestante % 60;
-
-        display.innerText = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-
-        if (tempoRestante <= 0) {
-            clearInterval(cronometroInterval);
-            alert("Tempo esgotado! O treino irá para o fim da fila.");
-            finalizarNoBackend(id, 0); 
-        }
-        tempoRestante--;
-    }, 1000);
-}
-
-async function concluirRound(id) {
-    clearInterval(cronometroInterval);
-
-    const display = document.getElementById(`timer-${id}`);
-    const tempoTexto = display.innerText;
-    const [min, seg] = tempoTexto.split(':').map(Number);
-    const segundosRestantes = (min * 60) + seg;
-
-    if (confirm(`Você realmente concluiu as 100 repetições com foco?\nTempo bônus para o próximo: ${min}:${seg}`)) {
-        tempoBonusSegundos = segundosRestantes; // Acumula bônus para o próximo card
-        await finalizarNoBackend(id, segundosRestantes);
+            if (tempo <= 0) {
+                clearInterval(cronometro);
+                alert("Tempo esgotado! Excelente foco.");
+                concluirRound();
+            }
+        }, 1000);
     } else {
-        // Se cancelou, retoma o cronômetro (ajuste simples para não perder o tempo)
-        iniciarRound(id); 
+        rodando = false;
+        btnTimer.innerText = "Retomar";
+        btnTimer.style.background = "var(--gold)";
+        clearInterval(cronometro);
     }
+});
+
+function atualizarDisplay() {
+    let min = Math.floor(tempo / 60);
+    let sec = tempo % 60;
+    displayTimer.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-async function finalizarNoBackend(id, segundos) {
+// 3. FINALIZAR ROUND (ENVIO PARA O BACKEND)
+async function concluirRound() {
+    if (!idTreinoFila) return;
+
     try {
-        const response = await fetch(`http://localhost:5151/api/treino/finalizar-round/${id}?segundosRestantes=${segundos}`, {
+        // Envia os segundos restantes para o cálculo de BI no backend
+        const response = await fetch(`http://localhost:5151/api/treino/finalizar-round/${idTreinoFila}?segundosRestantes=${tempo}`, {
             method: 'POST'
         });
 
         if (response.ok) {
-            alert(segundos > 0 ? "Ótimo trabalho! Log salvo no histórico." : "Treino movido para o fim da fila.");
-            carregarDashboard(); // Recarrega os cards
+            alert("Round registrado com honra no seu histórico!");
+            location.reload(); // Recarga para vir o próximo fundamento da fila
         } else {
-            alert("Erro ao salvar no backend.");
+            alert("Erro ao salvar progresso no servidor.");
         }
     } catch (error) {
-        console.error("Erro ao finalizar:", error);
-        alert("Não foi possível conectar ao servidor.");
+        console.error("Erro na conexão:", error);
+        alert("Não foi possível conectar ao servidor para salvar.");
     }
 }
 
-// Inicializa o Dojo ao carregar a página
-carregarDashboard();
+// Evento do botão concluir
+btnConcluir.addEventListener('click', () => {
+    if (confirm("Deseja encerrar o round agora e salvar o progresso?")) {
+        concluirRound();
+    }
+});
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', carregarDadosIniciais);

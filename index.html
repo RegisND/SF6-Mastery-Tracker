@@ -1,28 +1,38 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dojo Master | SF6 Tracker</title>
-        <link rel="stylesheet" href="css/style.css">
-    </head>
-    <body>
-        <div class="dashboard">
-            <header>
-                <h1>DOJO MASTER: SF6</h1>
-                <div class="motto">"Treine mil dias para a base, dez mil para a maestria."</div>
-            </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dojo Master - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>DOJO MASTER</h1>
+            <p class="motto" id="jogo-display">"Treine mil dias para a base, dez mil para a maestria."</p>
+        </header>
 
-            <div id="treino-container" class="dashboard-grid"></div>
-
-            <div class="actions-footer">
-                <button class="btn-secondary">+ Novo Fundamento</button>
-                <button class="btn-secondary btn-bi" onclick="location.href='estatisticas.html'">
-                    📊 Ver Estatísticas
-                </button>
+        <section class="form-musashi" style="text-align: center;">
+            <h2 id="titulo-treino" style="color: var(--gold); margin-bottom: 10px;">Carregando...</h2>
+            
+            <div id="detalhes-treino" style="margin-bottom: 20px; line-height: 1.6;">
+                <p><strong>NÍVEL:</strong> <span id="nivel-id">-</span></p>
+                <p><strong>FOCO:</strong> <span id="foco-acao">-</span></p>
+                <p><strong>DISTRAÇÃO:</strong> <span id="distracao-acao">-</span></p>
             </div>
-        </div>
 
-        <script src="js/script.js"></script>
-    </body>
+            <div id="timer" style="font-size: 4rem; font-weight: bold; margin: 20px 0; color: #fff;">15:00</div>
+            
+            <button id="btn-timer" class="btn-finish" style="width: 100%;">Iniciar Round</button>
+            <button id="btn-concluir" class="btn-secondary" style="width: 100%; margin-top: 10px; display: none; border-color: var(--gold); color: var(--gold);">Concluir Round</button>
+        </section>
+
+        <div class="actions-footer">
+            <button class="btn-secondary" onclick="location.href='cadastro.html'">+ Novo Fundamento</button>
+            <button class="btn-secondary" onclick="location.href='estatisticas.html'">📊 Ver Estatísticas</button>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
 </html>

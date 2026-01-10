@@ -8,17 +8,18 @@
     <body>
         <div class="dashboard wide">
             <header>
-                <h1>ANÁLISE DE MAESTRIA</h1>
-                <div class="motto">"A vitória favorece quem estuda os próprios erros."</div>
-                <nav>
-                    <a href="index.html">← Voltar ao Treino</a>
-                </nav>
+                <h1>ESTATÍSTICAS DO DOJO</h1>
+                <p class="motto">"A vitória favorece quem estuda os próprios erros."</p>
             </header>
 
-            <section class="estatisticas-section">
-                <h2>Evolução por Fundamento</h2>
+            <div id="container-estatisticas" class="estatisticas-section">
+                <p>Analisando desempenho...</p>
                 <canvas id="graficoEvolucao"></canvas>
-            </section>
+            </div>
+
+            <div class="actions-footer">
+                <button class="btn-secondary" onclick="location.href='index.html'">Voltar ao Treino</button>
+            </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

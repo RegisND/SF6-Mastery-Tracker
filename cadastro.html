@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dojo Master - Novo Fundamento</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard container-cadastro">
+        <header>
+            <h1>NOVO FUNDAMENTO</h1>
+            <p class="motto">"Defina seu caminho com clareza."</p>
+        </header>
+
+        <form id="form-cadastro" class="form-musashi">
+            <div class="input-group">
+                <label for="jogo">JOGO</label>
+                <select id="jogo" class="input-dark" required>
+                    <option value="SF6">Street Fighter 6</option>
+                    <option value="GGST">Guilty Gear -Strive-</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="personagem">PERSONAGEM</label>
+                <input type="text" id="personagem" class="input-dark" placeholder="Ex: Chun-Li ou Sol Badguy" required>
+            </div>
+
+            <div class="input-group">
+                <label for="nome">NOME DO FUNDAMENTO</label>
+                <input type="text" id="nome" class="input-dark" placeholder="Ex: Anti-aéreo ou Roman Cancel" required>
+            </div>
+
+            <div class="input-group">
+                <label for="foco">FOCO (MENTAL STACK)</label>
+                <input type="text" id="foco" class="input-dark" placeholder="O que observar na luta?">
+            </div>
+
+            <div class="input-group">
+                <label for="distracao">DISTRAÇÃO (CARGA MENTAL)</label>
+                <input type="text" id="distracao" class="input-dark" placeholder="O que o oponente faz para te distrair?">
+            </div>
+
+            <div class="input-group section-divider">
+                <label class="label-alert">TRAVA ANTI-TILT (Regra de Musashi)</label>
+                <p class="help-text">Bloquear treino após quantas derrotas seguidas?</p>
+                <input type="number" id="limiteDerrotas" class="input-dark input-small" value="2" min="1" max="5">
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-finish">Consagrar Fundamento</button>
+                <button type="button" class="btn-secondary" onclick="location.href='index.html'">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/cadastro.js"></script>
+</body>
+</html>

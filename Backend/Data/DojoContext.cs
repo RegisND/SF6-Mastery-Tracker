@@ -29,17 +29,20 @@ namespace Backend.Data
             modelBuilder.Entity<RespostaTreino>(entity =>
             {
                 entity.ToTable("respostas_treino");
-                entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.Nome).HasColumnName("nome").IsRequired();
-                entity.Property(e => e.Comando).HasColumnName("comando");
-                entity.Property(e => e.Personagem).HasColumnName("personagem").HasDefaultValue("Chun-Li");
-                entity.Property(e => e.FundamentoId).HasColumnName("fundamento_id");
-                entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired(false);
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Personagem).IsRequired();
+                entity.Property(e => e.Nome).IsRequired();
+                entity.Property(e => e.Foco);
+                entity.Property(e => e.Distracao);
+                entity.Property(e => e.Jogo);
+                entity.Property(e => e.LimiteDerrotas);
+                entity.Property(e => e.NivelDisciplina);
 
                 // Relacionamento Resposta -> Fundamento
-                entity.HasOne<Fundamento>()
-                      .WithMany()
-                      .HasForeignKey(e => e.FundamentoId);
+                // entity.HasOne<Fundamento>()
+                    //   .WithMany()
+                    //   .HasForeignKey(e => e.FundamentoId);
             });
 
             // Mapeamento da Tabela FilaTreino (O coração do SaaS)
