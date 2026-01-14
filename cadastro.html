@@ -4,57 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dojo Master - Novo Fundamento</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="dashboard container-cadastro">
-        <header>
-            <h1>NOVO FUNDAMENTO</h1>
-            <p class="motto">"Defina seu caminho com clareza."</p>
-        </header>
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
 
-        <form id="form-cadastro" class="form-musashi">
-            <div class="input-group">
-                <label for="jogo">JOGO</label>
-                <select id="jogo" class="input-dark" required>
-                    <option value="SF6">Street Fighter 6</option>
-                    <option value="GGST">Guilty Gear -Strive-</option>
-                </select>
-            </div>
+    <div class="dashboard">
+        <h1 class="main-title">NOVO FUNDAMENTO</h1>
 
-            <div class="input-group">
-                <label for="personagem">PERSONAGEM</label>
-                <input type="text" id="personagem" class="input-dark" placeholder="Ex: Chun-Li ou Sol Badguy" required>
-            </div>
+        <img src="assets/image/personagens/Chun-Li.png" alt="" class="char-image char-player" style="opacity: 0.6;">
 
-            <div class="input-group">
-                <label for="nome">NOME DO FUNDAMENTO</label>
-                <input type="text" id="nome" class="input-dark" placeholder="Ex: Anti-aéreo ou Roman Cancel" required>
-            </div>
+        <section class="form-musashi" data-tilt data-tilt-max="5">
+            <p class="motto" style="margin-bottom: 20px;">"A prática leva à perfeição, a repetição leva à maestria."</p>
+            
+            <form id="form-cadastro">
+                <div class="info-box">
+                    <strong>NOME DO FUNDAMENTO</strong>
+                    <input type="text" id="nome" placeholder="Ex: Anti-Aéreo" required>
+                </div>
 
-            <div class="input-group">
-                <label for="foco">FOCO (MENTAL STACK)</label>
-                <input type="text" id="foco" class="input-dark" placeholder="O que observar na luta?">
-            </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="info-box" style="flex: 1;">
+                        <strong>PERSONAGEM</strong>
+                        <input type="text" id="personagem" placeholder="Seu Char" required>
+                    </div>
+                    <div class="info-box" style="flex: 1;">
+                        <strong>OPONENTE</strong>
+                        <input type="text" id="oponente" placeholder="Rival" required>
+                    </div>
+                </div>
 
-            <div class="input-group">
-                <label for="distracao">DISTRAÇÃO (CARGA MENTAL)</label>
-                <input type="text" id="distracao" class="input-dark" placeholder="O que o oponente faz para te distrair?">
-            </div>
+                <div class="info-box">
+                    <strong>FOCO (AÇÃO PRINCIPAL)</strong>
+                    <input type="text" id="foco" placeholder="Ex: Pulo Frontal" required>
+                </div>
 
-            <div class="input-group section-divider">
-                <label class="label-alert">TRAVA ANTI-TILT (Regra de Musashi)</label>
-                <p class="help-text">Bloquear treino após quantas derrotas seguidas?</p>
-                <input type="number" id="limiteDerrotas" class="input-dark input-small" value="2" min="1" max="5">
-            </div>
+                <div class="info-box">
+                    <strong>DISTRAÇÃO (AÇÃO SECUNDÁRIA)</strong>
+                    <input type="text" id="distracao" placeholder="Ex: Pulo Vertical" required>
+                </div>
 
-            <div class="button-group">
-                <button type="submit" class="btn-finish">Consagrar Fundamento</button>
-                <button type="button" class="btn-secondary" onclick="location.href='index.html'">Cancelar</button>
-            </div>
-        </form>
+                <div style="display: flex; gap: 10px;">
+                    <div class="info-box" style="flex: 1;">
+                        <strong>JOGO</strong>
+                        <select id="jogo">
+                            <option value="SF6">SF6</option>
+                            <option value="SF2">SF2</option>
+                        </select>
+                    </div>
+                    <div class="info-box" style="flex: 1;">
+                        <strong>NÍVEL</strong>
+                        <input type="number" id="nivelDisciplina" value="1" min="1" max="10">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-glass" style="width: 100%; margin-top: 20px; padding: 15px;">
+                    CONSAGRAR FUNDAMENTO
+                </button>
+            </form>
+        </section>
+
+        <div class="actions-footer">
+            <button class="btn-nav btn-glass" onclick="location.href='index.html'">VOLTAR AO DOJO</button>
+        </div>
     </div>
 
-    <script src="js/cadastro.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <script src="assets/js/cadastro.js"></script>
 </body>
 </html>

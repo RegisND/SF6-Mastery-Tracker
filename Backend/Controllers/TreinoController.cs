@@ -16,20 +16,7 @@ public class TreinoController : ControllerBase
         _context = context;
     }
 
-    // GET: api/treino (Para o dashboard ver o nível atual)
-    // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<FilaTreino>>> GetFila()   {
-    //     // Por enquanto, como não temos login, vamos passar um GUID qualquer ou
-    //     // buscar todos. Para teste, vamos buscar os 4 primeiros da fila.
-    //     return await _context.FilaTreinos
-    //         .Include(f => f.Resposta)
-    //         .Where(f => f.Concluido == false)
-    //         .OrderBy(f => f.OrdemFila)
-    //         .Take(4)
-    //         .ToListAsync();
-    // }
-
-    [HttpGet]
+    [HttpGet("fila")]
     public async Task<ActionResult<IEnumerable<FilaTreino>>> GetFila()
     {
         var lista = await _context.FilaTreinos
@@ -117,6 +104,7 @@ public class TreinoController : ControllerBase
     {
         if (novoFundamento == null) return BadRequest("Dados inválidos");
 
+        if (novoFundamento.Id == Guid.Empty) novoFundamento.Id = Guid.NewGuid();
         // 1. Salva o fundamento na biblioteca
         _context.RespostasTreino.Add(novoFundamento);
         await _context.SaveChangesAsync();

@@ -4,35 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dojo Master - Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="dashboard">
-        <header>
-            <h1>DOJO MASTER</h1>
-            <p class="motto" id="jogo-display">"Treine mil dias para a base, dez mil para a maestria."</p>
-        </header>
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
 
-        <section class="form-musashi" style="text-align: center;">
-            <h2 id="titulo-treino" style="color: var(--gold); margin-bottom: 10px;">Carregando...</h2>
+    <div class="dashboard">
+        <h1 class="main-title">DOJO MASTER</h1>
+
+        <img id="char-render-player" src="" alt="" class="char-image char-player">
+        <img id="char-render-enemy" src="" alt="" class="char-image char-enemy">
+
+        <section class="form-musashi" data-tilt data-tilt-max="10">
+            <header>
+                <img id="game-logo-bg" src="" alt="" class="game-logo">
+                <h2 id="titulo-treino">CARREGANDO...</h2>
+                <p class="motto" id="jogo-display">"Treine mil dias para a base, dez mil para a maestria."</p>
+            </header>
             
-            <div id="detalhes-treino" style="margin-bottom: 20px; line-height: 1.6;">
-                <p><strong>NÍVEL:</strong> <span id="nivel-id">-</span></p>
-                <p><strong>FOCO:</strong> <span id="foco-acao">-</span></p>
-                <p><strong>DISTRAÇÃO:</strong> <span id="distracao-acao">-</span></p>
+            <div id="detalhes-treino">
+                <div class="info-box">
+                    <strong>NÍVEL</strong>
+                    <span id="nivel-id">-</span>
+                </div>
+                <div class="info-box">
+                    <strong>FOCO</strong>
+                    <span id="foco-acao">-</span>
+                </div>
+                <div class="info-box">
+                    <strong>DISTRAÇÃO</strong>
+                    <span id="distracao-acao">-</span>
+                </div>
             </div>
 
-            <div id="timer" style="font-size: 4rem; font-weight: bold; margin: 20px 0; color: #fff;">15:00</div>
+            <div id="timer">15:00</div>
             
-            <button id="btn-timer" class="btn-finish" style="width: 100%;">Iniciar Round</button>
-            <button id="btn-concluir" class="btn-secondary" style="width: 100%; margin-top: 10px; display: none; border-color: var(--gold); color: var(--gold);">Concluir Round</button>
+            <button id="btn-timer" class="btn-glass">INICIAR ROUND</button>
         </section>
 
         <div class="actions-footer">
-            <button class="btn-secondary" onclick="location.href='cadastro.html'">+ Novo Fundamento</button>
-            <button class="btn-secondary" onclick="location.href='estatisticas.html'">📊 Ver Estatísticas</button>
+            <button class="btn-nav btn-glass" onclick="location.href='cadastro.html'">NOVO</button>
+            <button class="btn-nav btn-glass" onclick="location.href='estatisticas.html'">STATS</button>
         </div>
     </div>
-    <script src="js/script.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
