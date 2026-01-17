@@ -13,6 +13,7 @@ namespace Backend.Data
         public DbSet<FilaTreino> FilaTreinos { get; set; }
         public DbSet<NivelStack> NiveisStack { get; set; } // Caso queira mapear a tabela de configurações
         public DbSet<HistoricoTreino> HistoricoTreino { get; set; }
+        public DbSet<Personagem> Personagens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

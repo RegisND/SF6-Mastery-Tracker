@@ -6,18 +6,32 @@
     <title>Dojo Master - Novo Fundamento</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="theme-sf6">
     <div class="circle circle-1"></div>
     <div class="circle circle-2"></div>
 
     <div class="dashboard">
         <h1 class="main-title">NOVO FUNDAMENTO</h1>
 
-        <img src="assets/image/personagens/Chun-Li.png" alt="" class="char-image char-player" style="opacity: 0.6;">
+        <img id="player-render" src="assets/image/personagens/SF6/Chun-Li.png" class="char-image char-player">
+        <img id="opponent-render" src="assets/image/personagens/SF6/Ryu.png" class="char-image char-enemy">
 
-        <section class="form-musashi" data-tilt data-tilt-max="5">
-            <p class="motto" style="margin-bottom: 20px;">"A prática leva à perfeição, a repetição leva à maestria."</p>
-            
+        <section class="form-musashi" data-tilt data-tilt-max="5" data-tilt-glare data-tilt-max-glare="0.2">
+            <p class="motto" style="font-size: 0.7rem; color: #bbb; font-style: italic; margin-bottom: 15px;">
+                "A prática leva à perfeição, a repetição leva à maestria."
+            </p>
+
+            <div class="game-selector-container">
+                <label class="game-radio">
+                    <input type="radio" name="game-choice" value="SF6" checked>
+                    <span class="radio-label">STREET FIGHTER 6</span>
+                </label>
+                <label class="game-radio">
+                    <input type="radio" name="game-choice" value="GGST">
+                    <span class="radio-label">GUILTY GEAR STRIVE</span>
+                </label>
+            </div>
+
             <form id="form-cadastro">
                 <div class="info-box">
                     <strong>NOME DO FUNDAMENTO</strong>
@@ -26,47 +40,38 @@
 
                 <div style="display: flex; gap: 10px;">
                     <div class="info-box" style="flex: 1;">
-                        <strong>PERSONAGEM</strong>
-                        <input type="text" id="personagem" placeholder="Seu Char" required>
+                        <strong>SEU PERSONAGEM</strong>
+                        <select id="personagem" required></select>
                     </div>
                     <div class="info-box" style="flex: 1;">
                         <strong>OPONENTE</strong>
-                        <input type="text" id="oponente" placeholder="Rival" required>
+                        <select id="oponente" required></select>
                     </div>
                 </div>
 
                 <div class="info-box">
-                    <strong>FOCO (AÇÃO PRINCIPAL)</strong>
+                    <strong>AÇÃO PRINCIPAL (FOCO)</strong>
                     <input type="text" id="foco" placeholder="Ex: Pulo Frontal" required>
                 </div>
 
                 <div class="info-box">
-                    <strong>DISTRAÇÃO (AÇÃO SECUNDÁRIA)</strong>
+                    <strong>AÇÃO SECUNDÁRIA (DISTRAÇÃO)</strong>
                     <input type="text" id="distracao" placeholder="Ex: Pulo Vertical" required>
                 </div>
 
-                <div style="display: flex; gap: 10px;">
-                    <div class="info-box" style="flex: 1;">
-                        <strong>JOGO</strong>
-                        <select id="jogo">
-                            <option value="SF6">SF6</option>
-                            <option value="SF2">SF2</option>
-                        </select>
-                    </div>
-                    <div class="info-box" style="flex: 1;">
-                        <strong>NÍVEL</strong>
-                        <input type="number" id="nivelDisciplina" value="1" min="1" max="10">
-                    </div>
+                <div class="info-box">
+                    <strong>NÍVEL</strong>
+                    <input type="number" id="nivelDisciplina" value="1" min="1" max="10">
                 </div>
 
-                <button type="submit" class="btn-glass" style="width: 100%; margin-top: 20px; padding: 15px;">
+                <button type="submit" class="btn-glass" style="width: 100%; margin-top: 15px;">
                     CONSAGRAR FUNDAMENTO
                 </button>
             </form>
         </section>
 
         <div class="actions-footer">
-            <button class="btn-nav btn-glass" onclick="location.href='index.html'">VOLTAR AO DOJO</button>
+            <button class="btn-glass btn-nav" onclick="location.href='index.html'">VOLTAR AO DOJO</button>
         </div>
     </div>
 

@@ -2,269 +2,167 @@
 
 :root {
     --bg-dark: #060606;
-    --sf-pink-rgb: 255, 0, 255;
-    --gold-rgb: 255, 204, 0;
+    /* Padrão SF6 */
+    --accent-rgb: 157, 40, 170; 
+    --secondary-rgb: 221, 186, 32;
+}
+
+body.theme-sf6 {
+    --accent-rgb: 157, 40, 170;   /* #9D28AA */
+    --secondary-rgb: 221, 186, 32; /* #DDBA20 */
+}
+
+body.theme-ggst {
+    --accent-rgb: 255, 68, 60;    /* #FF443C */
+    --secondary-rgb: 255, 255, 255; /* #FFFFFF */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
 body {
     background: var(--bg-dark);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow-x: hidden;
     color: #fff;
+    transition: background 0.5s ease;
 }
 
-/* --- Iluminação --- */
+/* --- Iluminação de Fundo --- */
 .circle {
     position: absolute; border-radius: 50%; filter: blur(60px); z-index: 0;
     animation: syncPulse 6s infinite alternate ease-in-out;
 }
-.circle-1 { width: 400px; height: 400px; background: rgba(var(--sf-pink-rgb), 1); top: -50px; left: -100px; }
-.circle-2 { width: 250px; height: 250px; background: rgba(var(--gold-rgb), 1); bottom: -50px; right: -50px; opacity: 0.1; }
+.circle-1 { width: 400px; height: 400px; background: rgba(var(--accent-rgb), 0.6); top: -50px; left: -100px; }
+.circle-2 { width: 250px; height: 250px; background: rgba(var(--secondary-rgb), 0.1); bottom: -50px; right: -50px; }
 
 @keyframes syncPulse {
-    0% { opacity: 0.15; transform: scale(1); }
-    100% { opacity: 0.35; transform: scale(1.1); }
+    0% { opacity: 0.2; transform: scale(1); }
+    100% { opacity: 0.5; transform: scale(1.1); }
 }
 
-/* --- Personagens --- */
-.char-image {
-    position: fixed;
-    bottom: 20px;
-    height: 75vh;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 1.5s ease;
-}
-.char-player { 
-    left: 10%; 
-    transform: scaleX(-1); 
-}
-.char-enemy { 
-    right: 5%; 
-    transform: scaleX(1); 
+/* --- Animação Metalizada Pulsante --- */
+@keyframes pulseBorda {
+    0% {
+        border-top-color: rgba(var(--accent-rgb), 0.3); /* Piso de luz constante */
+        border-left-color: rgba(var(--accent-rgb), 0.3);
+    }
+    100% {
+        border-top-color: rgba(var(--accent-rgb), 0.9);
+        border-left-color: rgba(var(--accent-rgb), 0.9);
+    }
 }
 
-/* --- Dashboard Container --- */
+/* --- Container Principal --- */
 .dashboard {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: 100%;
-    height: 100vh;
     z-index: 10;
-}
-
-/* --- Card --- */
-.form-musashi {
-    position: relative;
-    width: 320px;
-    background: rgba(255, 255, 255, 0.08); /* Aumentado levemente para o reflexo ter base */
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    z-index: 10;
-    overflow: hidden; /* CRÍTICO para o glare */
-    
-    border: none;
-    border-top: 2px solid rgba(var(--sf-pink-rgb), 0.3);
-    border-left: 2px solid rgba(var(--sf-pink-rgb), 0.3);
-    
-    animation: pulseBorda 6s infinite alternate ease-in-out;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-    
-    transform-style: preserve-3d;
-}
-
-/* FORÇAR O BRILHO DO VANILLA TILT */
-.js-tilt-glare {
-    border-radius: 20px !important;
-    z-index: 12 !important; /* Acima de tudo para o reflexo aparecer */
-}
-
-/* Conteúdo interno recuado para o brilho passar por cima */
-.form-musashi header, 
-.form-musashi #detalhes-treino, 
-.form-musashi #timer, 
-.form-musashi #btn-timer {
-    transform: translateZ(20px);
-}
-
-@keyframes pulseBorda {
-    0% {
-        border-top-color: rgba(var(--sf-pink-rgb), 0.1);
-        border-left-color: rgba(var(--sf-pink-rgb), 0.1);
-    }
-    100% {
-        border-top-color: rgba(var(--sf-pink-rgb), 0.8);
-        border-left-color: rgba(var(--sf-pink-rgb), 0.8);
-        box-shadow: -5px -5px 20px rgba(var(--sf-pink-rgb), 0.2), 0 30px 60px rgba(0,0,0,0.7);
-    }
-}
-
-/* Sincronização secundária para info-boxes */
-@keyframes borderLight {
-    0% { border-top-color: rgba(var(--sf-pink-rgb), 0.1); border-left-color: rgba(var(--sf-pink-rgb), 0.1); }
-    100% { border-top-color: rgba(var(--sf-pink-rgb), 0.5); border-left-color: rgba(var(--sf-pink-rgb), 0.5); }
-}
-
-.game-logo { width: 60px; margin-bottom: 5px; }
-
-#titulo-treino {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: 2px;
-    margin-bottom: 2px;
-    text-transform: uppercase;
+    padding: 40px 0;
 }
 
 .main-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 800;
-    letter-spacing: 8px;
-    margin-bottom: 20px;
-    color: #fff;
-    text-shadow: 0 0 20px rgba(var(--sf-pink-rgb), 0.5);
-    z-index: 10;
+    letter-spacing: 6px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5);
 }
 
-.motto {
-    font-size: 0.7rem;
-    color: #bbb;
-    font-style: italic;
-    margin-bottom: 10px;
-    line-height: 1.4;
-    opacity: 0.9;
-    letter-spacing: 0.5px;
+/* --- Card de Vidro (Ajustado) --- */
+.form-musashi {
+    position: relative;
+    width: 380px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 2px solid rgba(var(--accent-rgb), 0.3);
+    border-left: 2px solid rgba(var(--accent-rgb), 0.3);
+    animation: pulseBorda 6s infinite alternate ease-in-out;
 }
 
-#detalhes-treino { margin: 10px 0; }
-
+/* --- Elementos de Formulário --- */
 .info-box {
     background: rgba(255,255,255,0.02);
     border-radius: 12px;
-    margin: 5px 0;
-    padding: 8px 12px;  
+    margin: 10px 0;
+    padding: 10px 15px;
     text-align: left;
-    /* Ajuste na borda pulsante */
-    border: 1px solid transparent;
-    border-top: 1.5px solid rgba(var(--sf-pink-rgb), 0.1);
-    border-left: 1.5px solid rgba(var(--sf-pink-rgb), 0.1);
-    animation: borderLight 6s infinite alternate ease-in-out;
-}
-
-.info-box strong { 
-    display: block; 
-    font-size: 0.6rem; 
-    color: rgba(var(--sf-pink-rgb), 0.7);
-    letter-spacing: 2px;
-    margin-bottom: 2px;
-}
-
-.info-box span { 
-    font-size: 0.85rem; 
-    color: #ffffff;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-}
-
-#timer { font-size: 3rem; font-weight: 800; margin: 5px 0; color: #fff; }
-
-.btn-glass {
-    position: relative; 
-    background: rgba(255, 255, 255, 0.05);
-    border: none;
-    border-top: 1.5px solid rgba(var(--sf-pink-rgb), 0.1);
-    border-left: 1.5px solid rgba(var(--sf-pink-rgb), 0.1);
+    border-left: 3px solid rgba(var(--accent-rgb), 0.3);
     animation: pulseBorda 6s infinite alternate ease-in-out;
-    border-radius: 10px; color: #fff; font-weight: bold;
-    cursor: pointer; overflow: hidden; transition: 0.4s;
 }
 
-#btn-timer { width: 100%; padding: 12px; font-size: 0.85rem; margin-top: 10px; }
+.info-box strong { font-size: 0.6rem; color: rgba(var(--accent-rgb), 0.8); letter-spacing: 2px; }
+input, select { background: transparent; border: none; color: #fff; width: 100%; outline: none; margin-top: 5px; }
+select option { background: #111; color: #fff; }
 
-.btn-glass::before, .btn-nav::before {
-    content: ''; 
-    position: absolute; 
-    top: 0; 
-    left: -150%; 
-    width: 100%; 
-    height: 100%;
-    /* Mudamos de Branco para Pink/Dourado dinâmico usando a variável */
-    background: linear-gradient(90deg, transparent, rgba(var(--sf-pink-rgb), 0.8), transparent);
-    transition: 0.6s ease-in-out;
-    z-index: 1; /* Garante que fique visível sob o vidro */
-}
+/* --- Switch e Botões Metálicos --- */
+.game-selector-container { display: flex; gap: 10px; margin-bottom: 20px; }
+.game-radio { flex: 1; }
+.game-radio input { display: none; }
 
-.btn-glass:hover::before, .btn-nav:hover::before { 
-    left: 150%; 
-}
-
-.btn-glass:hover, .btn-nav:hover {
-    background: rgba(var(--sf-pink-rgb), 0.15); /* Fundo levemente colorido no hover */
-    transform: translateY(-3px);
-    /* Brilho externo (Glow) mais forte */
-    box-shadow: 0 0 20px rgba(var(--sf-pink-rgb), 0.8);
-    border-top-color: rgba(var(--sf-pink-rgb), 1);
-    border-left-color: rgba(var(--sf-pink-rgb), 1);
-}
-
-.btn-glass span, .btn-nav span {
-    position: relative;
-    z-index: 2;
-}
-/* Footer Nav */
-.btn-nav {
-    flex: 1;
-    padding: 10px;
-    font-size: 0.65rem;
+.radio-label, .btn-glass {
+    display: block;
+    color: #fff;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
+    border: 1.5px solid transparent;
     cursor: pointer;
-    position: relative;
     overflow: hidden;
-    color: #fff;
-    font-weight: bold;
-    
-    /* CORREÇÃO DAS BORDAS PULSANTES */
-    border: 1px solid transparent;
-    border-top: 1.5px solid rgba(var(--sf-pink-rgb), 0.1);
-    border-left: 1.5px solid rgba(var(--sf-pink-rgb), 0.1);
-    animation: pulseBorda 6s infinite alternate ease-in-out;
-    
+    position: relative;
     transition: 0.4s;
+    font-weight: 800;
+    text-align: center;
+    font-size: 0.75rem;
+    animation: pulseBorda 6s infinite alternate ease-in-out;
 }
 
-.actions-footer {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    width: 320px;
-    z-index: 10;
+.radio-label::before, .btn-glass::before {
+    content: ''; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    transition: 0.6s ease-in-out; z-index: 1;
 }
 
-input, select {
-    background: transparent;
-    border: none;
-    color: #fff;
-    width: 100%;
-    outline: none;
-    font-size: 0.85rem;
-    margin-top: 5px;
+.radio-label:hover::before, .btn-glass:hover::before, .game-radio input:checked + .radio-label::before { left: 150%; }
+
+.game-radio input:checked + .radio-label, .btn-glass:hover {
+    background: rgba(var(--accent-rgb), 0.3);
+    transform: translateY(-2px);
 }
 
-input::placeholder {
-    color: rgba(255,255,255,0.2);
+/* --- Renders Laterais --- */
+.char-image {
+    position: fixed; bottom: 0; height: 80vh; z-index: 1;
+    pointer-events: none; transition: 0.5s;
+    filter: drop-shadow(0 0 20px rgba(var(--accent-rgb), 0.2));
+}
+.char-player { left: 2%; }
+.char-enemy { right: 2%; transform: scaleX(-1); }
+
+.actions-footer { margin-top: 30px; display: flex; justify-content: center; width: 100%; }
+.btn-nav { min-width: 180px; text-decoration: none; }
+
+/* Estilo para as miniaturas no Dashboard */
+.mini-render {
+    position: absolute;
+    right: -10px;
+    bottom: 0;
+    height: 100%;
+    opacity: 0.8;
+    z-index: 1;
+    pointer-events: none;
+    mask-image: linear-gradient(to left, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to left, black 70%, transparent 100%);
 }
 
-/* Tira as setinhas do input number */
-input::-webkit-inner-spin-button {
-    display: none;
+.card-fundamento {
+    position: relative;
+    overflow: hidden; /* Garante que o personagem não saia do card */
 }

@@ -129,6 +129,38 @@ public class TreinoController : ControllerBase
         _context.FilaTreinos.Add(fila);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Fundamento consagrado!", Id = novoFundamento.Id});
+        return Ok(new { message = $"Fundamento de {novoFundamento.Jogo} consagrado!", Id = novoFundamento.Id});
+    }
+
+    [HttpGet("personagens/{jogo}")]
+    public async Task<IActionResult> GetPersonagens(string jogo)
+    {
+        // NOrmaliza a string para busca (ex: "sf6" -> "SF6")
+        string jogoBusca = jogo.Trim().ToUpper();
+
+        // Isso vai aparecer no terminal (dotnet run) quando acessar a URL
+        Console.WriteLine($"[DEBUG] Buscando personagens para o jogo: {jogoBusca}");
+
+        try
+        {
+            var personagens = await _context.Personagens
+            .Where(p => p.Jogo.ToUpper() == jogoBusca)
+            .OrderBy(p => p.Nome)
+            .ToListAsync();
+
+            if (personagens == null || !personagens.Any())
+            {
+                Console.WriteLine($"[DEBUG] Nenhum personagem encontrado para: {jogoBusca}");
+                return NotFound(new { mensagem = $"Nenhum lutador encontrado para o jogo {jogoBusca}." });   
+            }
+
+            Console.WriteLine($"[DEBUG] Sucesso! Encontrados {personagens.Count} personagens.");
+            return Ok(personagens);    
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Falha ao buscar personagens: {ex.Message}");
+            return StatusCode(500, new { erro = ex.Message });
+        }
     }
 }
