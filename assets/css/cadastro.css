@@ -1,0 +1,39 @@
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    z-index: 10;
+    padding: 40px 0;
+}
+
+.form-musashi {
+    width: 380px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 2px solid rgba(var(--accent-rgb), 0.3);
+    border-left: 2px solid rgba(var(--accent-rgb), 0.3);
+    animation: pulseBorda 6s infinite alternate ease-in-out;
+}
+
+.info-box {
+    background: rgba(255,255,255,0.02);
+    border-radius: 12px;
+    margin: 10px 0;
+    padding: 10px 15px;
+    text-align: left;
+    border-left: 3px solid rgba(var(--accent-rgb), 0.3);
+    animation: pulseBorda 6s infinite alternate ease-in-out;
+}
+
+.info-box strong { font-size: 0.6rem; color: rgba(var(--accent-rgb), 0.8); letter-spacing: 2px; }
+
+input, select { background: transparent; border: none; color: #fff; width: 100%; outline: none; margin-top: 5px; }
+
+.game-selector-container { display: flex; gap: 10px; margin-bottom: 20px; }
+.game-radio input { display: none; }
+.game-radio input:checked + .radio-label { background: rgba(var(--accent-rgb), 0.3); }
+.game-radio input:checked + .radio-label::before { left: 150%; }

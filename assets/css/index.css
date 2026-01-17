@@ -1,0 +1,105 @@
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    z-index: 10;
+    padding: 40px 0;
+}
+
+.main-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 6px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5);
+}
+
+.form-musashi {
+    position: relative;
+    width: 380px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 2px solid rgba(var(--accent-rgb), 0.3);
+    border-left: 2px solid rgba(var(--accent-rgb), 0.3);
+    text-align: center;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+#game-logo-bg {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: auto;
+    opacity: 0.3;
+    z-index: 1;
+    pointer-events: none;
+    transform: translateZ(20px);
+    filter: brightness(1.2) grayscale(0.2);
+    transition: all 0.5s ease;
+}
+
+.form-musashi:hover #game-logo-bg {
+    opacity: 0.6;
+    filter: brightness(1.5) grayscale(0);
+}
+
+.info-box {
+    background: rgba(255,255,255,0.02);
+    border-radius: 12px;
+    margin: 10px 0;
+    padding: 10px 15px;
+    text-align: left;
+    border: 1px solid transparent;
+    border-left: 3px solid rgba(var(--accent-rgb), 0.3);
+    border-top: 1px solid rgba(var(--accent-rgb), 0.2);
+}
+
+.info-box strong { font-size: 0.6rem; color: rgba(var(--accent-rgb), 0.8); letter-spacing: 2px; display: block; }
+.info-box span { color: #fff; font-size: 0.9rem; }
+
+#timer {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 20px 0;
+    text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5);
+}
+
+.char-image {
+    position: fixed; bottom: 0; height: 80vh; z-index: 1;
+    pointer-events: none; transition: 0.5s;
+    filter: drop-shadow(0 0 20px rgba(var(--accent-rgb), 0.2));
+}
+.char-player { left: 2%; }
+.char-enemy { right: 2%; transform: scaleX(-1); }
+
+.actions-footer { 
+    margin-top: 30px; 
+    display: flex; 
+    justify-content: center; 
+    gap: 20px; 
+    width: 100%; 
+}
+.btn-nav { min-width: 150px; }
+
+.js-tilt-glare {
+    border-radius: 20px;
+    z-index: 5 !important;
+}
+
+.js-tilt-glare-inner {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, transparent 100%) !important;
+    opacity: 0; 
+    transition: opacity 0.4s ease;
+    mix-blend-mode: overlay !important;
+}
+
+.form-musashi:hover .js-tilt-glare-inner {
+    opacity: 0.3; 
+}

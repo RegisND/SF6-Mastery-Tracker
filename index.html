@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dojo Master - Dashboard</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Dojo Mastery - Dashboard</title>
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/index.css">
 </head>
 <body class="theme-sf6">
     <div class="circle circle-1"></div>
@@ -16,9 +17,8 @@
         <img id="char-render-player" src="" alt="" class="char-image char-player">
         <img id="char-render-enemy" src="" alt="" class="char-image char-enemy">
 
-        <section class="form-musashi" data-tilt data-tilt-max="10">
+        <section class="form-musashi">
             <header>
-                <img id="game-logo-bg" src="" alt="" class="game-logo">
                 <h2 id="titulo-treino">CARREGANDO...</h2>
                 <p class="motto" id="jogo-display">"Treine mil dias para a base, dez mil para a maestria."</p>
             </header>
@@ -38,9 +38,12 @@
                 </div>
             </div>
 
-            <div id="timer">15:00</div>
-            
-            <button id="btn-timer" class="btn-glass">INICIAR ROUND</button>
+            <div id="timer-wrapper">
+                <div id="timer">15:00</div>
+                <button id="btn-timer" class="btn-glass">INICIAR ROUND</button>
+            </div>
+
+            <img id="game-logo-bg" src="" alt="" class="game-logo">
         </section>
 
         <div class="actions-footer">

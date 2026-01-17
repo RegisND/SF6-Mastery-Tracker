@@ -2,16 +2,10 @@ let tempoRestante = 15 * 60;
 let cronometro;
 let rodando = false;
 
-// --- FUNÇÃO AUXILIAR PARA CRIAR O NOME DO ARQUIVO ---
 function formatarCaminhoImagem(jogo, nomePersonagem) {
     if (!nomePersonagem) return 'assets/image/personagens/placeholder.png';
-    
-    // 1. Força SF6 se o jogo vier vazio ou estranho
     const pastaJogo = (jogo && jogo.trim().toUpperCase() === 'GGST') ? 'GGST' : 'SF6';
-    
-    // 2. Limpa o nome (ex: "Anji Mito" -> "Anji_Mito")
     const slug = nomePersonagem.trim().replace(/\s+/g, '_');
-    
     return `assets/image/personagens/${pastaJogo}/${slug}.png`;
 }
 
@@ -19,11 +13,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const jogoSalvo = localStorage.getItem('ultimoJogo') || 'SF6';
     document.body.className = `theme-${jogoSalvo.toLowerCase()}`;
 
+    // Inicialização Manual do Tilt no Card Principal para garantir o Brilho (Glare)
+    const cardPrincipal = document.querySelector(".form-musashi");
+    if (cardPrincipal) {
+        // Destrói qualquer instância anterior para evitar conflitos
+        if (cardPrincipal.vanillaTilt) cardPrincipal.vanillaTilt.destroy();
+
+        VanillaTilt.init(cardPrincipal, {
+            max: 10,
+            speed: 400,         // Aumentamos a velocidade para ser mais responsivo
+            glare: true,
+            "max-glare": 0.5,   // Intensidade quando o mouse está em cima
+            "glare-prerender": false, // IMPORTANTE: Impede que o brilho apareça antes do mouse
+            perspective: 1000,
+            scale: 1.01,
+            reset: true,        // Garante que o card e o brilho voltem ao estado inicial ao sair
+            gyroscope: true
+        });
+    }
+
     carregarFilaTreino();
     carregarDadosPrincipal();
 });
 
-// --- CARREGA A FILA LATERAL ---
 async function carregarFilaTreino() {
     try {
         const res = await fetch('http://localhost:5151/api/treino/fila');
@@ -33,9 +45,8 @@ async function carregarFilaTreino() {
         container.innerHTML = '';
 
         fila.forEach(item => {
-            const dados = item.resposta; // Onde estão os dados extraídos do campo 'descricao'
+            const dados = item.resposta;
             const imgPath = formatarCaminhoImagem(dados.jogo, dados.personagem);
-
             container.innerHTML += `
                 <div class="card-fundamento" data-tilt>
                     <img src="${imgPath}" class="mini-render" alt="${dados.personagem}" 
@@ -44,8 +55,7 @@ async function carregarFilaTreino() {
                         <h3>${dados.nome}</h3>
                         <p>${dados.personagem} vs ${dados.oponente}</p>
                     </div>
-                </div>
-            `;
+                </div>`;
         });
         
         VanillaTilt.init(document.querySelectorAll(".card-fundamento"), {
@@ -54,7 +64,6 @@ async function carregarFilaTreino() {
     } catch (err) { console.error("Erro na fila:", err); }
 }
 
-// --- CARREGA O CARD CENTRAL ---
 async function carregarDadosPrincipal() {
     try {
         const response = await fetch('http://localhost:5151/api/treino/fila');
@@ -62,35 +71,26 @@ async function carregarDadosPrincipal() {
 
         if (data && data.length > 0) {
             const treino = data[0].resposta;
-
-            // Atualiza Textos
             document.getElementById('titulo-treino').innerText = treino.nome.toUpperCase();
             document.getElementById('foco-acao').innerText = treino.foco;
             document.getElementById('distracao-acao').innerText = treino.distracao;
             document.getElementById('nivel-id').innerText = treino.nivelDisciplina;
 
-            // Logo de Fundo
             const jogoValido = (treino.jogo && treino.jogo.trim().toUpperCase() === 'GGST') ? 'GGST' : 'SF6';
             document.getElementById('game-logo-bg').src = `assets/image/logos/${jogoValido}.png`;
             
-            // RENDERS LATERAIS
             const pImg = document.getElementById('char-render-player');
             const eImg = document.getElementById('char-render-enemy');
-
             pImg.src = formatarCaminhoImagem(treino.jogo, treino.personagem);
             eImg.src = formatarCaminhoImagem(treino.jogo, treino.oponente);
-
             pImg.onload = () => pImg.style.opacity = "0.7";
             eImg.onload = () => eImg.style.opacity = "0.7";
-            
-            // Fallback caso a imagem física não exista
             pImg.onerror = () => pImg.src = 'assets/image/personagens/SF6/Chun-Li.png';
             eImg.onerror = () => eImg.src = 'assets/image/personagens/SF6/Ryu.png';
         }
     } catch (err) { console.error("Erro no card principal:", err); }
 }
 
-// --- LOGICA DO CRONÔMETRO (Mantida) ---
 document.getElementById('btn-timer').addEventListener('click', function() {
     if (!rodando) {
         rodando = true;
